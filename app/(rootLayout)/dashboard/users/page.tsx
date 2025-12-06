@@ -51,17 +51,16 @@ export default function UsersPage() {
     refetchOnMount: false,
   });
 
-  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Users</h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your team members and their roles.
+          <h1 className="text-2xl font-semibold">Admin User Management</h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            Manage admin users and their account permission here.{" "}
           </p>
         </div>
-        <Button className="bg-primary-green text-white hover:bg-primary-green">
+        <Button className="bg-primary-green text-base font-normal text-white hover:bg-primary-green">
           <Plus className="h-4 w-4 mr-2" />
           Add User
         </Button>
