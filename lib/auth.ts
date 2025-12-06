@@ -9,6 +9,8 @@ export interface User {
   name: string
   email: string
   role: string
+  accessToken?: string
+  expiresAt?: string
 }
 
 export const authOptions: NextAuthOptions = {
@@ -38,12 +40,11 @@ export const authOptions: NextAuthOptions = {
               name: `${apiUser.firstName} ${apiUser.lastName}`,
               email: apiUser.email,
               role: apiUser.role,
+              accessToken: response.token,
+              expiresAt: response.expiresAt,
             };
           }
         } catch (error) {
-          // Log the error for debugging, but don't throw it
-          // NextAuth will handle authentication failure
-          console.error('Login API error:', error);
           if (error instanceof ApiError) {
             console.error('API Error details:', {
               message: error.message,
@@ -67,6 +68,8 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.role = (user as User).role
+        token.accessToken = (user as User).accessToken
+        token.expiresAt = (user as User).expiresAt
       }
       return token
     },
@@ -74,6 +77,8 @@ export const authOptions: NextAuthOptions = {
       if (token) {
         session.user.id = token.sub!
         session.user.role = token.role as string
+        session.user.accessToken = token.accessToken as string
+        session.user.expiresAt = token.expiresAt as string
       }
       return session
     }
@@ -82,4 +87,25 @@ export const authOptions: NextAuthOptions = {
 
 export async function auth() {
   return await getServerSession(authOptions)
+}
+
+// Client-side function to get auth token
+export async function getAuthToken(): Promise<string | null> {
+  try {
+    const response = await fetch('/api/auth/session', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const session = await response.json();
+      
+      return session?.user?.accessToken || null;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
 }

@@ -1,81 +1,65 @@
-"use client"
-
-import { useQuery } from "@tanstack/react-query"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { MoreHorizontal, Plus } from "lucide-react"
-
-interface User {
-  id: string
-  name: string
-  email: string
-  role: string
-  status: "active" | "inactive"
-  joinedAt: string
+"use client";
+import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { MoreHorizontal, Plus } from "lucide-react";
+import { getUsers } from "@/apiServices/users/api.usersServices";
+import { User } from "@/types/authTypes/authType";
+interface UserDisplay {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: "active" | "inactive";
+  joinedAt: string;
 }
 
-async function fetchUsers(): Promise<User[]> {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  return [
-    {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      role: "Admin",
-      status: "active",
-      joinedAt: "2024-01-01",
-    },
-    {
-      id: "2",
-      name: "Jane Smith",
-      email: "jane@example.com",
-      role: "Editor",
-      status: "active",
-      joinedAt: "2024-01-05",
-    },
-    {
-      id: "3",
-      name: "Bob Johnson",
-      email: "bob@example.com",
-      role: "Viewer",
-      status: "inactive",
-      joinedAt: "2024-01-10",
-    },
-    {
-      id: "4",
-      name: "Alice Brown",
-      email: "alice@example.com",
-      role: "Editor",
-      status: "active",
-      joinedAt: "2024-01-12",
-    },
-    {
-      id: "5",
-      name: "Charlie Wilson",
-      email: "charlie@example.com",
-      role: "Viewer",
-      status: "active",
-      joinedAt: "2024-01-15",
-    },
-  ]
+async function fetchUsers(): Promise<UserDisplay[]> {
+  try {
+    const response = await getUsers();
+    if (response.success && response.data) {
+      return response.data.map((user: User) => ({
+        id: user._id,
+        name: `${user.firstName} ${user.lastName}`,
+        email: user.email,
+        role: user.role,
+        status: user.isActive ? "active" : "inactive",
+        joinedAt: new Date(user.createdAt).toLocaleDateString(),
+      }));
+    }
+    return [];
+  } catch (error) {
+    return [];
+  }
 }
 
 export default function UsersPage() {
   const { data: users, isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
-  })
+    refetchOnMount: false,
+  });
 
+  
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Users</h1>
-          <p className="text-muted-foreground mt-1">Manage your team members and their roles.</p>
+          <p className="text-muted-foreground mt-1">
+            Manage your team members and their roles.
+          </p>
         </div>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
@@ -83,7 +67,7 @@ export default function UsersPage() {
         </Button>
       </div>
 
-      <Card className="bg-card border-border">
+      <Card className="bg-card rounded-sm border-border">
         <CardHeader>
           <CardTitle>All Users</CardTitle>
         </CardHeader>
@@ -95,7 +79,7 @@ export default function UsersPage() {
                 <TableHead>Role</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Joined</TableHead>
-                <TableHead className="w-10"></TableHead>
+                <TableHead className="w-10">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -136,7 +120,9 @@ export default function UsersPage() {
                           </Avatar>
                           <div>
                             <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {user.email}
+                            </p>
                           </div>
                         </div>
                       </TableCell>
@@ -153,7 +139,9 @@ export default function UsersPage() {
                           {user.status}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{user.joinedAt}</TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {user.joinedAt}
+                      </TableCell>
                       <TableCell>
                         <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
@@ -166,5 +154,5 @@ export default function UsersPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
