@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 import { getMedia, deleteMedia } from "@/apiServices/media/api.mediaServices";
 
@@ -38,6 +39,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ onSelectionChange }) => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const itemsPerPage = 20;
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: media, isLoading } = useQuery({
     queryKey: ["media", currentPage, itemsPerPage],
@@ -73,17 +75,31 @@ const MediaCard: React.FC<MediaCardProps> = ({ onSelectionChange }) => {
 
   const handleDelete = async (public_id: string) => {
     try {
-      await deleteMedia(public_id);
+      const response = await deleteMedia(public_id);
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: response.message || "Media deleted successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: response.message || "Failed to delete media",
+          variant: "destructive",
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ["media"] });
     } catch (error) {
-      console.error("Failed to delete media:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete media",
+        variant: "destructive",
+      });
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
-    <Tabs defaultValue="library" className="h-[80vh]">
+    <Tabs defaultValue="library" className="h-full w-full">
       <TabsList className="grid bg-primary-green rounded-sm w-60 h-11 grid-cols-2">
         <TabsTrigger className="text-white data-[state=active]:text-black" value="upload">Upload</TabsTrigger>
         <TabsTrigger value="library">Library</TabsTrigger>
@@ -124,6 +140,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ onSelectionChange }) => {
               selectedImages={selectedImages}
               onSelectionChange={handleSelectionChange}
               onDelete={handleDelete}
+              isLoading={isLoading}
             />
 
             <div

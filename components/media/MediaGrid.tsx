@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Check, Trash2 } from "lucide-react";
+import { MediaCardSkeleton } from "./MediaCardSkeleton";
 
 interface MediaItem {
   _id: string;
@@ -14,9 +15,10 @@ interface MediaGridProps {
   selectedImages: string[];
   onSelectionChange: (selected: { id: string; url: string }[]) => void;
   onDelete?: (public_id: string) => void;
+  isLoading?: boolean;
 }
 
-export function MediaGrid({ media, selectedImages, onSelectionChange, onDelete }: MediaGridProps) {
+export function MediaGrid({ media, selectedImages, onSelectionChange, onDelete, isLoading }: MediaGridProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const handleClick = (item: MediaItem) => {
@@ -37,13 +39,17 @@ export function MediaGrid({ media, selectedImages, onSelectionChange, onDelete }
     }
   };
 
+  if (isLoading) {
+    return <MediaCardSkeleton />;
+  }
+
   return (
     <div className="flex-1 overflow-y-auto p-4">
       <div className="flex flex-wrap gap-4">
         {media.map((item) => (
           <div
             key={item._id}
-            className="relative cursor-pointer rounded-lg overflow-hidden border border-border hover:shadow-lg transition-shadow"
+            className="relative cursor-pointer rounded-sm overflow-hidden border border-[#D9D9D9] hover:shadow-lg transition-shadow"
             style={{ width: "120px", height: "120px" }}
             onClick={() => handleClick(item)}
             onMouseEnter={() => setHoveredItem(item._id)}
@@ -57,17 +63,17 @@ export function MediaGrid({ media, selectedImages, onSelectionChange, onDelete }
               className="object-cover"
             />
             {selectedImages.includes(item._id) && (
-              <div className="absolute top-1 right-1 bg-white rounded-full p-1">
-                <Check className="h-4 w-4 text-green-600" />
+              <div className="absolute top-0.5 left-0.5 bg-primary-green rounded-sm ">
+                <Check className="h-5 w-5 font-semibold text-white" />
               </div>
             )}
             {hoveredItem === item._id && (
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+              <div className="absolute cursor-pointer top-0 right-0 flex items-center justify-center">
                 <button
                   onClick={(e) => handleDelete(e, item.public_id)}
-                  className="bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
+                  className="bg-red-500 cursor-pointer text-white rounded-full p-1 hover:bg-red-600 transition-colors"
                 >
-                  <Trash2 className="h-5 w-5" />
+                  <Trash2 className="h-4 w-4" />
                 </button>
               </div>
             )}

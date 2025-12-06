@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   Menu,
   ImagePlus,
+  StickyNote,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,9 +22,10 @@ import { signOut } from "next-auth/react";
 const navigation = [
   { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { name: "Users", href: "/dashboard/users", icon: Users },
-  { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
+  // { name: "Orders", href: "/dashboard/orders", icon: ShoppingCart },
   { name: "Media", href: "/dashboard/media", icon: ImagePlus },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+  { name: "Blogs", href: "/dashboard/blog", icon: StickyNote },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -66,9 +68,9 @@ export function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-sm text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                  ? "bg-primary-green text-sidebar-primary-foreground"
                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               )}
             >
