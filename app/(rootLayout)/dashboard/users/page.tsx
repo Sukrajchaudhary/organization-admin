@@ -61,7 +61,7 @@ export default function UsersPage() {
             Manage your team members and their roles.
           </p>
         </div>
-        <Button>
+        <Button className="bg-primary-green text-white hover:bg-primary-green">
           <Plus className="h-4 w-4 mr-2" />
           Add User
         </Button>

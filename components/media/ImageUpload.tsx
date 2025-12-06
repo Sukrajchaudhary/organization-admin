@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload } from "lucide-react";
 import { uploadMedia } from "@/apiServices/media/api.mediaServices";
@@ -16,6 +17,7 @@ export const ImageUpload = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { files, handleFiles, removeFile, clearAll, validFiles, hasErrors } = useFileUpload();
 
@@ -38,11 +40,20 @@ export const ImageUpload = () => {
       }
     },
     onSuccess: (data) => {
+      toast({
+        title: "Success",
+        description: `Successfully uploaded ${validFiles.length} image(s)!`,
+      });
       queryClient.invalidateQueries({ queryKey: ["media"] });
       clearAll();
       setTimeout(() => setUploadProgress(0), 2000);
     },
     onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Upload failed. Please try again.",
+        variant: "destructive",
+      });
       setUploadProgress(0);
     },
   });
@@ -140,11 +151,6 @@ export const ImageUpload = () => {
           />
 
           <StatusMessages
-            isError={uploadMutation.isError}
-            error={uploadMutation.error}
-            isSuccess={uploadMutation.isSuccess}
-            uploadProgress={uploadProgress}
-            validFilesCount={validFiles.length}
             hasErrors={hasErrors}
             invalidFilesCount={files.length - validFiles.length}
           />
