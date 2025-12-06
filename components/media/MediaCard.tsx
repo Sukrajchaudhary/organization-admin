@@ -99,7 +99,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ onSelectionChange }) => {
   };
 
   return (
-    <Tabs defaultValue="library" className="h-[80vh]">
+    <Tabs defaultValue="library" className="h-full w-full">
       <TabsList className="grid bg-primary-green rounded-sm w-60 h-11 grid-cols-2">
         <TabsTrigger className="text-white data-[state=active]:text-black" value="upload">Upload</TabsTrigger>
         <TabsTrigger value="library">Library</TabsTrigger>

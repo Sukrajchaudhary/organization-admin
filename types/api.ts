@@ -1,9 +1,14 @@
-
 export interface ApiResponse<T = any> {
   success: boolean;
   message?: string;
   data: T;
   [key: string]: any;
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    pages: number;
+  };
 }
 
 export interface ValidationField {
@@ -25,7 +30,7 @@ export class ApiError extends Error {
 
   constructor(message: string, status?: number, details?: ApiErrorDetails) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
     this.status = status;
     if (details) {
       this.statusCode = details.statusCode;

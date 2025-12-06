@@ -12,6 +12,13 @@ const api = {
     upload:"media/create",
     delete:"media/delete"
   },
+  blogs:{
+   list:"blogs",
+   create:"blogs",
+   getBlogById:"blogs/{id}",
+   update:"blogs/{id}",
+   delete:"blogs/{id}",
+  },
   dashboard: {
     stats: "dashboard/stats",
     analytics: "dashboard/analytics",

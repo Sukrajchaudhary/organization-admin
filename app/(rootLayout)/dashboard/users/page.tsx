@@ -113,13 +113,13 @@ export default function UsersPage() {
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <Avatar>
-                            <AvatarFallback className="bg-primary/10 text-primary">
+                            <AvatarFallback className="bg-primary/10 font-semibold text-primary">
                               {user.name.charAt(0)}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="font-semibold text-[#111827]">{user.name}</p>
+                            <p className="text-sm text-[#4B5563] font-medium">
                               {user.email}
                             </p>
                           </div>
@@ -131,7 +131,7 @@ export default function UsersPage() {
                           variant="secondary"
                           className={
                             user.status === "active"
-                              ? "bg-emerald-500/10 text-emerald-500"
+                              ? "bg-[#F0FFF3] rounded-full border border-[#BAFFAA] text-primary-green"
                               : "bg-muted text-muted-foreground"
                           }
                         >
