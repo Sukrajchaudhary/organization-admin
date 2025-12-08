@@ -11,6 +11,7 @@ export interface RootBlogsData {
   description: string;
   slug: string;
   image: string;
+  categories?: string[];
   readTime: number;
   status: string;
   draft: boolean;

@@ -41,7 +41,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Edit, Trash2, Upload, Plus } from "lucide-react";
-import { formatDate, truncateText, stripHtml } from "@/lib/commin";
+import { formatDate, truncateText, stripHtml } from "@/lib/common";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";

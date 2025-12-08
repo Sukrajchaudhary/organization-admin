@@ -19,6 +19,12 @@ const api = {
    update:"blogs/{id}",
    delete:"blogs/{id}",
   },
+  categories:{
+   list:"categories",
+   create:"categories/create",
+   update:"categories/update/{id}",
+   delete:"categories/delete/{id}"
+  },
   dashboard: {
     stats: "dashboard/stats",
     analytics: "dashboard/analytics",

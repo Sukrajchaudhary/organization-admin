@@ -36,6 +36,7 @@ import { createBlog } from "@/apiServices/blog/api.blogServices";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/types/api";
+import ReactSelect from "@/components/ui/secect";
 export default function CreateBlogPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +50,7 @@ export default function CreateBlogPage() {
       description: "",
       slug: "",
       image: "",
+      categories: [],
       readTime: 1,
       status: "draft",
       draft: true,
@@ -173,6 +175,25 @@ export default function CreateBlogPage() {
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter blog slug" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="categories"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+                    <FormControl>
+                      <ReactSelect
+                        url="categories"
+                        isMulti={true}
+                        form={form}
+                        name="categories"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

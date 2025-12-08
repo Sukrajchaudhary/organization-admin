@@ -36,8 +36,8 @@ import { updateBlog, getBlogById } from "@/apiServices/blog/api.blogServices";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { ApiError } from "@/types/api";
-import { RootBlogsData } from "@/types/blogTypes/blogTypes";
 import BlogEditSkeleton from "@/components/blog/BlogEditSkeleton";
+import ReactSelect from "@/components/ui/secect";
 
 export default function EditBlogPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -64,6 +64,7 @@ export default function EditBlogPage() {
       description: "",
       slug: "",
       image: "",
+      categories: [],
       readTime: 1,
       status: "draft",
       draft: true,
@@ -82,6 +83,7 @@ export default function EditBlogPage() {
         description: blogData.description,
         slug: blogData.slug,
         image: blogData.image,
+        categories: blogData.categories || [],
         readTime: blogData.readTime,
         status: blogData.status as "published" | "draft",
         draft: blogData.draft,
@@ -215,6 +217,25 @@ export default function EditBlogPage() {
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter blog slug" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="categories"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+                    <FormControl>
+                      <ReactSelect
+                        url="categories"
+                        isMulti={true}
+                        form={form}
+                        name="categories"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
