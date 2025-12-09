@@ -86,24 +86,29 @@ const ReactSelect = ({
                 : selectedOption &&
                   !Array.isArray(selectedOption) &&
                   typeof selectedOption === "object"
-                ? (selectedOption as { label: string; value: number | null })
+                  ? (selectedOption as { label: string; value: number | null })
                     .value
-                : null;
-
-              // Update the form value using form.setValue()
+                  : null;
               form.setValue(name, selectedValue, {
                 shouldValidate: true,
                 shouldDirty: true,
               });
-
-              // Log the selected value for debugging
-              console.log(`Selected ${name}:`, selectedValue);
             }}
             isLoading={isLoading}
             isDisabled={isLoading}
             value={
               isMulti
-                ? data.filter((option) => field.value.includes(option.value))
+                ? data.filter((option) =>
+                  Array.isArray(field.value)
+                    ? field.value.some(
+                      (item: any) =>
+                        item === option.value ||
+                        item?._id === option.value ||
+                        item?.id === option.value ||
+                        item?.value === option.value
+                    )
+                    : false
+                )
                 : data.find((option) => option.value === field.value) // For single select, find the selected option
             }
           />

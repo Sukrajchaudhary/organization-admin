@@ -273,7 +273,7 @@ export default function CreateBlogPage() {
                     <FormLabel>Status</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -281,7 +281,7 @@ export default function CreateBlogPage() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem  value="published">Published</SelectItem>
+                        <SelectItem value="published">Published</SelectItem>
                         <SelectItem value="draft">Draft</SelectItem>
                       </SelectContent>
                     </Select>

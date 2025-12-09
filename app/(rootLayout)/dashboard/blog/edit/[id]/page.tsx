@@ -55,6 +55,10 @@ export default function EditBlogPage() {
       return response.data;
     },
     enabled: !!blogId,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const form = useForm<BlogFormData>({
@@ -83,9 +87,9 @@ export default function EditBlogPage() {
         description: blogData.description,
         slug: blogData.slug,
         image: blogData.image,
-        categories: blogData.categories || [],
+        categories: blogData.categories?.map((c: any) => (typeof c === "object" ? c._id || c.id : c)) || [],
         readTime: blogData.readTime,
-        status: blogData.status as "published" | "draft",
+        status: (blogData.status?.toLowerCase() as "published" | "draft") || "draft",
         draft: blogData.draft,
         meta: {
           title: blogData.meta?.title || "",
