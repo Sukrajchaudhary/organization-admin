@@ -35,6 +35,16 @@ const api = {
     update: "orders",
     delete: "orders",
   },
+  queries: {
+    list: "queries",
+    create: "queries",
+    getById: "queries/{id}",
+    update: "queries/{id}",
+    delete: "queries/{id}",
+  },
+  notifications:{
+    list:"notifications"
+  }
 };
 
 export default api

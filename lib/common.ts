@@ -1,6 +1,15 @@
 export const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString()
   }
+export const formatDateTime = (dateString: string) => {
+  return new Date(dateString).toLocaleString([], {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
 
   export const stripHtml = (html: string) => {
     return html.replace(/<[^>]*>/g, '');

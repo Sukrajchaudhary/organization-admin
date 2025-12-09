@@ -13,6 +13,7 @@ import {
   Menu,
   ImagePlus,
   StickyNote,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -26,6 +27,7 @@ const navigation = [
   { name: "Media", href: "/dashboard/media", icon: ImagePlus },
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { name: "Blogs", href: "/dashboard/blog", icon: StickyNote },
+  { name: "Queries", href: "/dashboard/queries", icon: MessageSquare },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
@@ -85,7 +87,7 @@ export function Sidebar() {
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           className={cn(
-            "flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+            "flex w-full cursor-pointer  font-semibold items-center gap-3 px-3 py-2.5 rounded-sm text-base text-sidebar-foreground  transition-colors"
           )}
         >
           <LogOut className="h-5 w-5 shrink-0" />
