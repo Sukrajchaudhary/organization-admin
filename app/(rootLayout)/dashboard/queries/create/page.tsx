@@ -7,7 +7,9 @@ import { createQuery } from "@/apiServices/queries/api.queriesServices";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDraft } from "@/hooks/useDraft";
 import { Button } from "@/components/ui/button";
+import { QueryFormSkeleton } from "../QueryFormSkeleton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -44,15 +46,20 @@ export default function CreateQueryPage() {
             },
       });
 
+      // Use Draft Hook
+      // The hook handles loading, resetting, and watching/saving.
+      const { clearDraft, isLoading: isDraftLoading } = useDraft<QueryFormData>(form, "create-query-draft");
+
       const handleSubmit = async (data: QueryFormData) => {
             setIsLoading(true);
             try {
                   const res = await createQuery(data);
                   toast({
                         title: "Success",
-                        description: "Query created successfully",
+                        description: `${res.message}`,
                         variant: "default",
                   });
+                  await clearDraft();
                   router.push("/dashboard/queries");
             } catch (error: any) {
                   toast({
@@ -65,8 +72,12 @@ export default function CreateQueryPage() {
             }
       };
 
+      if (isDraftLoading) {
+            return <QueryFormSkeleton />;
+      }
+
       return (
-            <div className="max-w-2xl mx-auto py-8">
+            <div className="rounded-md mx-auto py-8">
                   <Card className="w-full">
                         <CardHeader>
                               <CardTitle>Create New Query</CardTitle>
@@ -157,7 +168,10 @@ export default function CreateQueryPage() {
                                                 <Button
                                                       type="button"
                                                       variant="outline"
-                                                      onClick={() => router.back()}
+                                                      onClick={async () => {
+                                                            await clearDraft();
+                                                            router.back();
+                                                      }}
                                                       disabled={isLoading}
                                                 >
                                                       Cancel

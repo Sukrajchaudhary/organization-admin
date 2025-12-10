@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { useQuery } from "@tanstack/react-query";
 import { getAllNotifications } from "@/apiServices/notifications/api.notifications";
-import { formatDate, formatDateTime } from "@/lib/common";
+import {formatDateTime } from "@/lib/common";
 
 export function Header() {
   const { data: session } = useSession();
@@ -20,7 +20,6 @@ export function Header() {
     queryKey: ["Notification"],
     queryFn: () => getAllNotifications({ page: 1, limit: 100 }),
   });
-  console.log("Notification?", NotificationData?.data);
   return (
     <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6">
       <div className="flex items-center gap-4 flex-1">

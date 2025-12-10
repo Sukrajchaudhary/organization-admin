@@ -84,11 +84,11 @@ const BlogLayout = () => {
   });
   const handlePublish = async (blogId: string) => {
     try {
-      await updateBlog(blogId, { status: "published" });
+      const res=await updateBlog(blogId, { status: "published" });
       toast({
         variant: "default",
         title: "Success",
-        description: "Blog published successfully",
+        description: `${res.message}`,
       });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     } catch (error: any) {

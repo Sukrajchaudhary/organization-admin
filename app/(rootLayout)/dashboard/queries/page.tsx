@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDeleteDialog } from "@/hooks/useDeleteDialog";
-
 export default function QueriesPage() {
   const { data, isLoading } = useQuery<QueriesResponse>({
     queryKey: ["queries"],
@@ -22,9 +21,7 @@ export default function QueriesPage() {
       return res.data;
     },
   });
-
   const router = useRouter();
-
   const { handleDelete, DeleteModal } = useDeleteDialog({
     deleteFn: deleteQuery,
     invalidateKey: ["queries"],
@@ -48,6 +45,8 @@ export default function QueriesPage() {
         </Link>
       </div>
 
+
+
       <Table>
         <TableHeader>
           <TableRow>
@@ -67,13 +66,12 @@ export default function QueriesPage() {
               <TableCell>{query.phoneNumber}</TableCell>
               <TableCell>
                 <span
-                  className={`text-sm px-2 py-1 rounded-full ${
-                    query.status === "resolved"
-                      ? "bg-green-100 text-green-800"
-                      : query.status === "in-progress"
+                  className={`text-sm px-2 py-1 rounded-full ${query.status === "resolved"
+                    ? "bg-green-100 text-green-800"
+                    : query.status === "in-progress"
                       ? "bg-blue-100 text-blue-800"
                       : "bg-yellow-100 text-yellow-800"
-                  }`}
+                    }`}
                 >
                   {query.status}
                 </span>
@@ -106,7 +104,8 @@ export default function QueriesPage() {
         </TableBody>
       </Table>
 
+
       <DeleteModal />
-    </div>
+    </div >
   );
 }

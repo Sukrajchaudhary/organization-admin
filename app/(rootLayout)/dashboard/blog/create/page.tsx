@@ -1,11 +1,9 @@
 "use client";
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,7 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, ImageIcon, Trash } from "lucide-react";
+import { ImageIcon, Trash } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -37,6 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { ApiError } from "@/types/api";
 import ReactSelect from "@/components/ui/secect";
+import { useDraft } from "@/hooks/useDraft";
 export default function CreateBlogPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +60,7 @@ export default function CreateBlogPage() {
       },
     },
   });
+  const { clearDraft, isLoading: isDraftLoading } = useDraft<BlogFormData>(form, "create-blog-draft");
 
   const onSubmit = async (data: BlogFormData) => {
     setIsLoading(true);
@@ -72,6 +72,7 @@ export default function CreateBlogPage() {
         description: `${res.message}`,
       });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      await clearDraft();
       router.push("/dashboard/blog");
     } catch (error: any) {
       if (error instanceof ApiError && error.fields) {

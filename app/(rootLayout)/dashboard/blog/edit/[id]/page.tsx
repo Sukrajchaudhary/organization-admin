@@ -38,6 +38,7 @@ import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { ApiError } from "@/types/api";
 import BlogEditSkeleton from "@/components/blog/BlogEditSkeleton";
 import ReactSelect from "@/components/ui/secect";
+import { useDraft } from "@/hooks/useDraft";
 
 export default function EditBlogPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -79,6 +80,7 @@ export default function EditBlogPage() {
       },
     },
   });
+  const { clearDraft, isLoading: isDraftLoading } = useDraft<BlogFormData>(form, "create-blog-draft");
 
   useEffect(() => {
     if (blogData) {
@@ -110,6 +112,7 @@ export default function EditBlogPage() {
         description: `${res.message}`,
       });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      await clearDraft()
       router.push("/dashboard/blog");
     } catch (error: any) {
       if (error instanceof ApiError && error.fields) {

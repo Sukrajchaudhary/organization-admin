@@ -6,10 +6,12 @@ import { querySchema, QueryFormData } from "@/formschema/querySchema";
 import { updateQuery, getQueryById } from "@/apiServices/queries/api.queriesServices";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter, useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDraft } from "@/hooks/useDraft";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { QueryFormSkeleton } from "../../QueryFormSkeleton";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -56,13 +58,12 @@ export default function EditQueryPage() {
                   description: "",
                   status: "new",
             },
-            values: queryData ? {
-                  subject: queryData.subject,
-                  email: queryData.email,
-                  phoneNumber: queryData.phoneNumber,
-                  description: queryData.description,
-                  status: queryData.status,
-            } : undefined,
+      });
+
+      // Integrate Draft Hook
+      // Pass the form instance and server data. UseDraft decides what to load.
+      const { clearDraft, isLoading: isDraftLoading } = useDraft<QueryFormData>(form, `edit-query-draft-${queryId}`, {
+            serverData: queryData as QueryFormData
       });
 
       const handleSubmit = async (data: QueryFormData) => {
@@ -71,9 +72,10 @@ export default function EditQueryPage() {
                   const res = await updateQuery(queryId, data);
                   toast({
                         title: "Success",
-                        description: "Query updated successfully",
+                        description: `${res.message}`,
                         variant: "default",
                   });
+                  await clearDraft();
                   router.push("/dashboard/queries");
             } catch (error: any) {
                   toast({
@@ -87,7 +89,7 @@ export default function EditQueryPage() {
       };
 
       if (isFetching) {
-            return <div>Loading query...</div>;
+            return <QueryFormSkeleton />;
       }
 
       if (!queryData) {
@@ -110,7 +112,7 @@ export default function EditQueryPage() {
                         </div>
                   </div>
 
-                  <div className="max-w-2xl mx-auto py-8">
+                  <div className=" mx-auto rounded-xs py-8">
                         <Card className="w-full">
                               <CardHeader>
                                     <CardTitle>Edit Query</CardTitle>
