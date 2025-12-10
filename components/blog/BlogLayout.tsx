@@ -1,7 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { deleteBlog, getBlogs, updateBlog } from "@/apiServices/blog/api.blogServices";
+import {
+  deleteBlog,
+  getBlogs,
+  updateBlog,
+} from "@/apiServices/blog/api.blogServices";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { RootBlogsData } from "@/types/blogTypes/blogTypes";
 import {
@@ -30,28 +34,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { MoreHorizontal, Edit, Trash2, Upload, Plus } from "lucide-react";
-import { formatDate, truncateText, stripHtml } from "@/lib/commin";
+import { formatDate, truncateText, stripHtml } from "@/lib/common";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useDeleteDialog } from "@/hooks/useDeleteDialog";
+import { useToast } from "../ui/use-toast";
 
 const BlogLayout = () => {
   const [selectedBlogs, setSelectedBlogs] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [blogToDelete, setBlogToDelete] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const limit = 10;
   const { data: Blogs, isLoading } = useQuery({
     queryKey: ["blogs", currentPage],
@@ -60,10 +52,9 @@ const BlogLayout = () => {
   });
   const blogs = Blogs?.data || [];
   const pagination = Blogs?.pagination;
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const router = useRouter();
-
+  const { toast } = useToast();
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedBlogs(blogs.map((blog) => blog._id));
@@ -74,7 +65,7 @@ const BlogLayout = () => {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    setSelectedBlogs([]); 
+    setSelectedBlogs([]);
   };
 
   const handleSelectBlog = (blogId: string, checked: boolean) => {
@@ -84,48 +75,20 @@ const BlogLayout = () => {
       setSelectedBlogs((prev) => prev.filter((id) => id !== blogId));
     }
   };
-
-  const handleEdit = (blogId: string) => {
-    router.push(`/dashboard/blog/edit/${blogId}`);
-  };
-
-  const handleDelete = (blogId: string) => {
-    setBlogToDelete(blogId);
-    setDeleteModalOpen(true);
-  };
-
-  const confirmDelete = async () => {
-    if (!blogToDelete) return;
-    setIsDeleting(true);
-    try {
-      await deleteBlog(blogToDelete);
-      toast({
-        variant: "default",
-        title: "Success",
-        description: "Blog deleted successfully",
-      });
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
-      setSelectedBlogs((prev) => prev.filter((id) => id !== blogToDelete));
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to delete blog",
-        variant: "destructive",
-      });
-    } finally {
-      setIsDeleting(false);
-      setDeleteModalOpen(false);
-      setBlogToDelete(null);
-    }
-  };
-
+  const { handleDelete, DeleteModal } = useDeleteDialog({
+    deleteFn: deleteBlog,
+    invalidateKey: ["blogs"],
+    successMessage: "Deleted successfully",
+    errorMessage: "Failed to delete ",
+    itemType: "Blog",
+  });
   const handlePublish = async (blogId: string) => {
     try {
-      await updateBlog(blogId, { status: "published" });
+      const res=await updateBlog(blogId, { status: "published" });
       toast({
         variant: "default",
         title: "Success",
-        description: "Blog published successfully",
+        description: `${res.message}`,
       });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
     } catch (error: any) {
@@ -244,11 +207,14 @@ const BlogLayout = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem
-                              onClick={() => handleEdit(blog._id)}
+                              onClick={() =>
+                                router.push(`/dashboard/blog/edit/${blog._id}`)
+                              }
                             >
                               <Edit className="mr-2 h-4 w-4" />
                               Edit
                             </DropdownMenuItem>
+
                             <DropdownMenuItem
                               onClick={() => handlePublish(blog._id)}
                             >
@@ -326,27 +292,7 @@ const BlogLayout = () => {
           </div>
         )}
       </div>
-
-      <AlertDialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the blog post.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDelete}
-              disabled={isDeleting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteModal />
     </div>
   );
 };

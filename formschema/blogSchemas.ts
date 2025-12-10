@@ -4,6 +4,7 @@ export const blogSchema = z.object({
   description: z.string().min(1, "Description is required"),
   slug: z.string().min(1, "Slug is required"),
   image: z.string().url("Invalid image URL"),
+  categories: z.array(z.string()).optional(),
   readTime: z.number().min(1, "Read time must be at least 1 minute"),
   status: z.enum(["published", "draft"], {
     errorMap: () => ({ message: "Status must be either 'published' or 'draft'" }),

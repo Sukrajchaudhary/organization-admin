@@ -36,8 +36,9 @@ import { updateBlog, getBlogById } from "@/apiServices/blog/api.blogServices";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
 import { ApiError } from "@/types/api";
-import { RootBlogsData } from "@/types/blogTypes/blogTypes";
 import BlogEditSkeleton from "@/components/blog/BlogEditSkeleton";
+import ReactSelect from "@/components/ui/secect";
+import { useDraft } from "@/hooks/useDraft";
 
 export default function EditBlogPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -55,6 +56,10 @@ export default function EditBlogPage() {
       return response.data;
     },
     enabled: !!blogId,
+    staleTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
   });
 
   const form = useForm<BlogFormData>({
@@ -64,6 +69,7 @@ export default function EditBlogPage() {
       description: "",
       slug: "",
       image: "",
+      categories: [],
       readTime: 1,
       status: "draft",
       draft: true,
@@ -74,6 +80,7 @@ export default function EditBlogPage() {
       },
     },
   });
+  const { clearDraft, isLoading: isDraftLoading } = useDraft<BlogFormData>(form, "create-blog-draft");
 
   useEffect(() => {
     if (blogData) {
@@ -82,8 +89,9 @@ export default function EditBlogPage() {
         description: blogData.description,
         slug: blogData.slug,
         image: blogData.image,
+        categories: blogData.categories?.map((c: any) => (typeof c === "object" ? c._id || c.id : c)) || [],
         readTime: blogData.readTime,
-        status: blogData.status as "published" | "draft",
+        status: (blogData.status?.toLowerCase() as "published" | "draft") || "draft",
         draft: blogData.draft,
         meta: {
           title: blogData.meta?.title || "",
@@ -104,6 +112,7 @@ export default function EditBlogPage() {
         description: `${res.message}`,
       });
       queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      await clearDraft()
       router.push("/dashboard/blog");
     } catch (error: any) {
       if (error instanceof ApiError && error.fields) {
@@ -215,6 +224,25 @@ export default function EditBlogPage() {
                     <FormLabel>Slug</FormLabel>
                     <FormControl>
                       <Input placeholder="Enter blog slug" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="categories"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+                    <FormControl>
+                      <ReactSelect
+                        url="categories"
+                        isMulti={true}
+                        form={form}
+                        name="categories"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

@@ -19,6 +19,12 @@ const api = {
    update:"blogs/{id}",
    delete:"blogs/{id}",
   },
+  categories:{
+   list:"categories",
+   create:"categories/create",
+   update:"categories/update/{id}",
+   delete:"categories/delete/{id}"
+  },
   dashboard: {
     stats: "dashboard/stats",
     analytics: "dashboard/analytics",
@@ -29,6 +35,16 @@ const api = {
     update: "orders",
     delete: "orders",
   },
+  queries: {
+    list: "queries",
+    create: "queries",
+    getById: "queries/{id}",
+    update: "queries/{id}",
+    delete: "queries/{id}",
+  },
+  notifications:{
+    list:"notifications"
+  }
 };
 
 export default api
