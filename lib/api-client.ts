@@ -107,8 +107,7 @@ class ApiClient {
     return this.request<T>(endpoint, { ...options, method: "DELETE" });
   }
 }
-
-// Create and export a default instance
-const baseUrl = process.env.NEXT_PUBLIC_BASE_SERVER_URL || "";
+import { env } from "./env";
+const baseUrl = env.NEXT_PUBLIC_BASE_SERVER_URL;
 export const apiClient = new ApiClient(baseUrl);
 export default ApiClient;

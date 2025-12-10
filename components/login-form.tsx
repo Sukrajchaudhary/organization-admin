@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ValidationField } from "@/types/api";
+
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -31,7 +31,7 @@ export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -44,46 +44,25 @@ export function LoginForm() {
   async function onSubmit(data: LoginFormData) {
     setIsLoading(true);
     setError("");
-    setFieldErrors({});
+
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      // Direct NextAuth signIn, which calls our authorize callback (and thus the backend)
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
       });
 
-      const result = await response.json();
-
-      if (result.success) {
-        // If API login successful, use NextAuth to establish session
-        const nextAuthResult = await signIn("credentials", {
-          email: data.email,
-          password: data.password,
-          redirect: false,
-        });
-
-        if (nextAuthResult?.ok) {
-          router.push("/dashboard");
-        } else {
-          setError("Session creation failed");
-        }
+      if (result?.ok) {
+        router.push("/dashboard");
+        router.refresh();
       } else {
-        const errorData = result.error;
-        if (errorData?.fields) {
-          const errors: Record<string, string> = {};
-          errorData.fields.forEach((field: ValidationField) => {
-            errors[field.field] = field.message;
-          });
-          setFieldErrors(errors);
-        } else {
-          setError(errorData?.message || "Login failed");
-        }
+        // NextAuth v4 default error is "CredentialsSignin"
+        setError("Invalid email or password");
       }
     } catch (err) {
-      setError("Network error. Please try again.");
+      setError("An unexpected error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -111,11 +90,7 @@ export function LoginForm() {
                       <Input placeholder="admin@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
-                    {fieldErrors.email && (
-                      <p className="text-sm text-destructive">
-                        {fieldErrors.email}
-                      </p>
-                    )}
+
                   </FormItem>
                 )}
               />
@@ -133,11 +108,7 @@ export function LoginForm() {
                       />
                     </FormControl>
                     <FormMessage />
-                    {fieldErrors.password && (
-                      <p className="text-sm text-destructive">
-                        {fieldErrors.password}
-                      </p>
-                    )}
+
                   </FormItem>
                 )}
               />
