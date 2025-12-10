@@ -22,7 +22,7 @@ export default function QueriesPage() {
     },
   });
   const router = useRouter();
-  const { handleDelete, DeleteModal } = useDeleteDialog({
+  const { handleDelete, deleteDialog } = useDeleteDialog({
     deleteFn: deleteQuery,
     invalidateKey: ["queries"],
     successMessage: "Query deleted successfully",
@@ -105,7 +105,7 @@ export default function QueriesPage() {
       </Table>
 
 
-      <DeleteModal />
+      {deleteDialog}
     </div >
   );
 }

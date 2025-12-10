@@ -75,7 +75,7 @@ const BlogLayout = () => {
       setSelectedBlogs((prev) => prev.filter((id) => id !== blogId));
     }
   };
-  const { handleDelete, DeleteModal } = useDeleteDialog({
+  const { handleDelete, deleteDialog } = useDeleteDialog({
     deleteFn: deleteBlog,
     invalidateKey: ["blogs"],
     successMessage: "Deleted successfully",
@@ -84,7 +84,7 @@ const BlogLayout = () => {
   });
   const handlePublish = async (blogId: string) => {
     try {
-      const res=await updateBlog(blogId, { status: "published" });
+      const res = await updateBlog(blogId, { status: "published" });
       toast({
         variant: "default",
         title: "Success",
@@ -146,93 +146,93 @@ const BlogLayout = () => {
             <TableBody>
               {isLoading
                 ? Array.from({ length: 5 }).map((_, i) => (
-                    <TableRow key={i} className="border-border">
-                      <TableCell>
-                        <Skeleton className="h-4 w-4" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-48" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-64" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-6 w-20" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-4 w-24" />
-                      </TableCell>
-                      <TableCell>
-                        <Skeleton className="h-8 w-8" />
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  <TableRow key={i} className="border-border">
+                    <TableCell>
+                      <Skeleton className="h-4 w-4" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-48" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-64" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-6 w-20" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-4 w-24" />
+                    </TableCell>
+                    <TableCell>
+                      <Skeleton className="h-8 w-8" />
+                    </TableCell>
+                  </TableRow>
+                ))
                 : blogs.map((blog: RootBlogsData) => (
-                    <TableRow key={blog._id} className="border-border">
-                      <TableCell>
-                        <Checkbox
-                          checked={selectedBlogs.includes(blog._id)}
-                          onCheckedChange={(checked) =>
-                            handleSelectBlog(blog._id, checked as boolean)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {blog.title}
-                      </TableCell>
-                      <TableCell className="max-w-xs">
-                        {truncateText(stripHtml(blog.description), 50)}
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className={
-                            statusStyles[
-                              blog.status as keyof typeof statusStyles
-                            ] || statusStyles.draft
-                          }
-                        >
-                          {blog.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {formatDate(blog.createdAt)}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() =>
-                                router.push(`/dashboard/blog/edit/${blog._id}`)
-                              }
-                            >
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
+                  <TableRow key={blog._id} className="border-border">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedBlogs.includes(blog._id)}
+                        onCheckedChange={(checked) =>
+                          handleSelectBlog(blog._id, checked as boolean)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {blog.title}
+                    </TableCell>
+                    <TableCell className="max-w-xs">
+                      {truncateText(stripHtml(blog.description), 50)}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="secondary"
+                        className={
+                          statusStyles[
+                          blog.status as keyof typeof statusStyles
+                          ] || statusStyles.draft
+                        }
+                      >
+                        {blog.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {formatDate(blog.createdAt)}
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(`/dashboard/blog/edit/${blog._id}`)
+                            }
+                          >
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
 
-                            <DropdownMenuItem
-                              onClick={() => handlePublish(blog._id)}
-                            >
-                              <Upload className="mr-2 h-4 w-4" />
-                              Publish
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDelete(blog._id)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          <DropdownMenuItem
+                            onClick={() => handlePublish(blog._id)}
+                          >
+                            <Upload className="mr-2 h-4 w-4" />
+                            Publish
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(blog._id)}
+                            className="text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </div>
@@ -292,7 +292,7 @@ const BlogLayout = () => {
           </div>
         )}
       </div>
-      <DeleteModal />
+      {deleteDialog}
     </div>
   );
 };

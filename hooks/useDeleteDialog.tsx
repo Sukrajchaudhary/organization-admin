@@ -71,7 +71,7 @@ export const useDeleteDialog = ({
 
   const description = `This action cannot be undone. This will permanently delete the ${itemType}.`;
 
-  const DeleteModal = () => (
+  const deleteDialog = (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -94,6 +94,6 @@ export const useDeleteDialog = ({
 
   return {
     handleDelete,
-    DeleteModal,
+    deleteDialog,
   };
 };
