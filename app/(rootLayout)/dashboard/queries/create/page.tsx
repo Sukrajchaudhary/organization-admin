@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDraft } from "@/hooks/useDraft";
+import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { QueryFormSkeleton } from "../QueryFormSkeleton";
 import { Input } from "@/components/ui/input";
@@ -33,6 +34,7 @@ import { Loader2 } from "lucide-react";
 export default function CreateQueryPage() {
       const router = useRouter();
       const { toast } = useToast();
+      const queryClient = useQueryClient();
       const [isLoading, setIsLoading] = useState(false);
 
       const form = useForm<QueryFormData>({
@@ -59,6 +61,8 @@ export default function CreateQueryPage() {
                         description: `${res.message}`,
                         variant: "default",
                   });
+                  queryClient.invalidateQueries({ queryKey: ["queries"], exact: false });
+                  queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
                   await clearDraft();
                   router.push("/dashboard/queries");
             } catch (error: any) {

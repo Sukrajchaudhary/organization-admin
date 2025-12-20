@@ -71,7 +71,8 @@ export default function CreateBlogPage() {
         title: "Success",
         description: `${res.message}`,
       });
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       await clearDraft();
       router.push("/dashboard/blog");
     } catch (error: any) {

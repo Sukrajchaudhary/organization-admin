@@ -90,7 +90,8 @@ const BlogLayout = () => {
         title: "Success",
         description: `${res.message}`,
       });
-      queryClient.invalidateQueries({ queryKey: ["blogs"] });
+      queryClient.invalidateQueries({ queryKey: ["blogs"], exact: false });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
     } catch (error: any) {
       toast({
         title: "Error",
