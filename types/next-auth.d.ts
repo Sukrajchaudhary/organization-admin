@@ -23,5 +23,8 @@ declare module "next-auth/jwt" {
     role: string
     accessToken?: string
     expiresAt?: string
+    userId?: string
+    email?: string
+    isExpired?: boolean
   }
 }

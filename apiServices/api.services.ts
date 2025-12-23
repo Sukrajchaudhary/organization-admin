@@ -6,6 +6,8 @@ const api = {
   },
   users: {
     list: "users",
+    deactive:"users/{id}/deactivate",
+    active:"users/{id}/active"
   },
   media:{
     list:"media",
@@ -44,6 +46,11 @@ const api = {
   },
   notifications:{
     list:"notifications"
+  },
+  trip:{
+    list:"trips",
+    create:"trips",
+    getByid:"trips/{id}"
   }
 };
 

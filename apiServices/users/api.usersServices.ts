@@ -2,8 +2,6 @@ import api from "../api.services";
 import { apiClient } from "@/lib/api-client";
 import { ApiResponse } from "@/types/api";
 import { User } from "@/types/authTypes/authType";
-// import { User } from "@/types/auth/authType";
-
 // Get all users (protected route)
 export async function getUsers(): Promise<ApiResponse<User[]>> {
   return apiClient.get<User[]>(api.auth.list);
@@ -32,4 +30,10 @@ export async function deleteUser(id: string): Promise<ApiResponse<void>> {
 // Create user (protected route - admin only)
 export async function createUser(data: Omit<User, '_id' | 'createdAt' | 'updatedAt' | '__v'>): Promise<ApiResponse<User>> {
   return apiClient.post<User>(api.auth.list, data);
+}
+
+// Deactivate/Activate user (protected route - admin only)
+export async function deactivateUser(id: string): Promise<ApiResponse<User>> {
+  const endpoint = api.users.deactive.replace("{id}", id);
+  return apiClient.put<User>(endpoint, {});
 }

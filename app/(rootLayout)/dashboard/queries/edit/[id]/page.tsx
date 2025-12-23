@@ -8,7 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter, useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useDraft } from "@/hooks/useDraft";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { QueryFormSkeleton } from "../../QueryFormSkeleton";
@@ -38,6 +38,7 @@ export default function EditQueryPage() {
       const params = useParams();
       const queryId = params.id as string;
       const { toast } = useToast();
+      const queryClient = useQueryClient();
       const [isLoading, setIsLoading] = useState(false);
 
       const { data: queryData, isLoading: isFetching } = useQuery({
@@ -75,6 +76,8 @@ export default function EditQueryPage() {
                         description: `${res.message}`,
                         variant: "default",
                   });
+                  queryClient.invalidateQueries({ queryKey: ["queries"], exact: false });
+                  queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
                   await clearDraft();
                   router.push("/dashboard/queries");
             } catch (error: any) {

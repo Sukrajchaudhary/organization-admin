@@ -54,7 +54,8 @@ export const useDeleteDialog = ({
         description: successMessage,
         variant: "default",
       });
-      queryClient.invalidateQueries({ queryKey: invalidateKey });
+      queryClient.invalidateQueries({ queryKey: invalidateKey, exact: false });
+      queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       onSuccess?.(idToDelete);
     } catch (error: any) {
       toast({
