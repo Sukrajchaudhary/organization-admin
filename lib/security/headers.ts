@@ -18,7 +18,7 @@ export function applySecurityHeaders(response: NextResponse): NextResponse {
     "default-src 'self'",
     "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https: blob:",
+    "img-src 'self' data: https: http: blob: https://res.cloudinary.com http://res.cloudinary.com",
     "font-src 'self' data:",
     "connect-src 'self' https://organization-71j0.onrender.com https://vercel.live",
     "frame-ancestors 'none'",

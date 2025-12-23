@@ -47,7 +47,11 @@ const api = {
   notifications:{
     list:"notifications"
   },
-
+  trip:{
+    list:"trips",
+    create:"trips",
+    getByid:"trips/{id}"
+  }
 };
 
 export default api

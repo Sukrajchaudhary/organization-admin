@@ -14,6 +14,7 @@ import {
   ImagePlus,
   StickyNote,
   MessageSquare,
+  MapPin,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,7 @@ const navigation = [
   { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { name: "Blogs", href: "/dashboard/blog", icon: StickyNote },
   { name: "Queries", href: "/dashboard/queries", icon: MessageSquare },
+  { name: "Trip", href: "/dashboard/trip", icon: MapPin },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

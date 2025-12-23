@@ -111,25 +111,28 @@ export const authOptions: NextAuthOptions = {
             return user
           }
         } catch (error) {
-          // Secure error handling - don't expose details
+          // Pass specific error message to the client
           if (error instanceof ApiError) {
             securityLogger.authFailure(
               email,
               ipAddress,
               `API Error: ${error.statusCode}`
             )
+            // Throw error with specific message for 429 and other API errors
+            throw new Error(error.message)
           } else {
             securityLogger.authFailure(
               email,
               ipAddress,
               'Unknown error'
             )
+            throw new Error('An unexpected error occurred. Please try again.')
           }
         }
 
         // Log failed authentication attempt
         securityLogger.authFailure(email, ipAddress, 'Invalid credentials')
-        return null
+        throw new Error('Invalid email or password')
       }
     })
   ],
