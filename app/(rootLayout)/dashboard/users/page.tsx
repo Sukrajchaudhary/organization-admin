@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 
 export default function UsersPage() {
   const {
@@ -60,6 +61,9 @@ export default function UsersPage() {
     toggleBlock,
     togglePaid,
     performUpgrade,
+    pagination,
+    setPage,
+    setLimit,
   } = useUserManagement();
 
   const { handleDelete, deleteDialog } = useDeleteDialog({
@@ -326,6 +330,18 @@ export default function UsersPage() {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Pagination Controls */}
+      <PaginationControls
+        currentPage={pagination.page}
+        totalPages={pagination.pages}
+        totalItems={pagination.total}
+        itemsPerPage={pagination.limit}
+        onPageChange={setPage}
+        onLimitChange={setLimit}
+        isLoading={isLoading}
+      />
+
       {deleteDialog}
     </div>
   );

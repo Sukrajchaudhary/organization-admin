@@ -26,6 +26,14 @@ interface UserDisplay {
     isBlocked: boolean;
   }
 
+
+export interface PaginationMetadata {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+}
+  
 export function useUserManagement() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -34,6 +42,14 @@ export function useUserManagement() {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [isPremiumFilter, setIsPremiumFilter] = useState<string>("all");
   const [accountTypeFilter, setAccountTypeFilter] = useState<string>("all");
+  
+  // Pagination State
+  const [pagination, setPagination] = useState<PaginationMetadata>({
+    page: 1,
+    limit: 10,
+    total: 0,
+    pages: 1,
+  });
 
   const handleSearchChange = (value: string) => {
     setSearchText(value);
@@ -42,17 +58,36 @@ export function useUserManagement() {
     }, 500);
     return () => clearTimeout(timer);
   };
+ 
+  // Handle Page Change
+  const handlePageChange = (newPage: number) => {
+     setPagination((prev) => ({ ...prev, page: newPage }));
+  };
+
+  // Handle Limit Change
+  const handleLimitChange = (newLimit: number) => {
+    setPagination((prev) => ({ ...prev, limit: newLimit, page: 1 }));
+  };
 
   const { data: users, isLoading } = useQuery({
-    queryKey: ["users", debouncedSearch, isPremiumFilter, accountTypeFilter],
+    queryKey: ["users", debouncedSearch, isPremiumFilter, accountTypeFilter, pagination.page, pagination.limit],
     queryFn: async (): Promise<UserDisplay[]> => {
       try {
         const response = await getUsers({
           search: debouncedSearch || undefined,
           isPremium: isPremiumFilter === "all" ? undefined : isPremiumFilter === "true",
           accountType: accountTypeFilter === "all" ? undefined : accountTypeFilter,
+          page: pagination.page,
+          limit: pagination.limit
         });
         if (response.success && response.data) {
+           if (response.pagination) {
+             setPagination((prev) => ({
+                ...prev,
+                total: response.pagination!.total,
+                pages: response.pagination!.pages,
+             }));
+           }
           return response.data.map((user: User) => ({
             id: user._id,
             name: user.fullName || user.username,
@@ -140,9 +175,12 @@ export function useUserManagement() {
     isPremiumFilter,
     accountTypeFilter,
     isToggling,
+    pagination,
     setSearchText: handleSearchChange, // Expose the handler wrapper
     setIsPremiumFilter,
     setAccountTypeFilter,
+    setPage: handlePageChange,
+    setLimit: handleLimitChange,
     toggleStatus,
     toggleBlock,
     togglePaid,

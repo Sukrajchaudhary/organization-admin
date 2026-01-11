@@ -224,7 +224,11 @@ export const authOptions: NextAuthOptions = {
 }
 
 export async function auth() {
-  return await getServerSession(authOptions)
+  try {
+    return await getServerSession(authOptions)
+  } catch (error) {
+    return null
+  }
 }
 
 // Client-side function to get auth token
