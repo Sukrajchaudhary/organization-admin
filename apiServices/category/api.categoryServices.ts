@@ -1,5 +1,6 @@
 import api from "../api.services";
 import { apiClient } from "@/lib/api-client";
+import { replacePathParams } from "@/lib/utils";
 import { ApiResponse } from "@/types/api";
 import { Category, CategoryCreate, CategoryUpdate } from "@/types/categoryTypes/categoryTypes";
 
@@ -17,12 +18,12 @@ export async function createCategory(data: CategoryCreate): Promise<ApiResponse<
 }
 
 export async function updateCategory(id: string, data: CategoryUpdate): Promise<ApiResponse<Category>> {
-  const endpoint = api.categories.update.replace('{id}', id);
+  const endpoint = replacePathParams(api.categories.update, { id });
   return apiClient.put<Category>(endpoint, data);
 }
 
 export async function deleteCategory(id: string): Promise<ApiResponse<void>> {
-  const endpoint = api.categories.delete.replace('{id}', id);
+  const endpoint = replacePathParams(api.categories.delete, { id });
   return apiClient.delete<void>(endpoint);
 }
 

@@ -1,5 +1,6 @@
 import api from "../api.services";
 import { apiClient } from "@/lib/api-client";
+import { replacePathParams } from "@/lib/utils";
 import { ApiResponse } from "@/types/api";
 import { Trip } from "@/types/trip/tripTypes";
 
@@ -13,7 +14,8 @@ export async function getTrips(params?: { page?: number; limit?: number }): Prom
 }
 
 export async function getTripById(id: string): Promise<ApiResponse<Trip>> {
-  return apiClient.get<Trip>(`${api.trip.getByid}/${id}`);
+  const endpoint = replacePathParams(api.trip.getByid, { id });
+  return apiClient.get<Trip>(endpoint);
 }
 
 export async function createTrip(data: Partial<Trip>): Promise<ApiResponse<Trip>> {

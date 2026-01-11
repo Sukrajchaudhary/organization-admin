@@ -11,23 +11,8 @@ export async function getMedia(params?: { page?: number; limit?: number }): Prom
   const endpoint = queryString ? `${api.media.list}?${queryString}` : api.media.list;
   return apiClient.get<mediaTypes[]>(endpoint);
 }
-export async function uploadMedia(formData: FormData): Promise<mediaTypes[]> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_SERVER_URL || '';
-  try {
-    const response = await fetch(`${baseUrl}media/create`, {
-      method: 'POST',
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `Upload failed: ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    throw error;
-  }
+export async function uploadMedia(formData: FormData): Promise<ApiResponse<mediaTypes[]>> {
+  return apiClient.post<mediaTypes[]>(api.media.upload, formData);
 }
 // // Example: Get public users (public route, no token required)
 // export async function getPublicUsers(): Promise<ApiResponse<User[]>> {

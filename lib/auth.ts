@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
             const apiUser = response.data;
             const user = {
               id: apiUser._id,
-              name: `${apiUser.firstName} ${apiUser.lastName}`,
+              name: apiUser.fullName || apiUser.username,
               email: apiUser.email,
               role: apiUser.role,
               accessToken: response.token,

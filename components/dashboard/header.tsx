@@ -43,25 +43,23 @@ export function Header() {
           <PopoverContent className="w-[450px]  max-h-[50vh]  overflow-y-auto">
             <div className="space-y-4 p-2">
               <h4 className="font-medium leading-none">Notifications</h4>
-              {NotificationData?.data.map((noti, index) => (
-                <>
-                  <div className="space-y-2">
-                    <div className="flex items-start space-x-2">
-                      <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">
-                          {noti.message}
-                        </p>
-                        <p className="text-sm font-medium">
-                          {formatDateTime(noti.createdAt)}
-                        </p>
-                        <p className="text-xs font-normal text-muted-foreground">
-                          {noti.type}
-                        </p>
-                      </div>
+              {NotificationData?.data.map((noti) => (
+                <div key={noti._id} className="space-y-2">
+                  <div className="flex items-start space-x-2">
+                    <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">
+                        {noti.message}
+                      </p>
+                      <p className="text-sm font-medium">
+                        {formatDateTime(noti.createdAt)}
+                      </p>
+                      <p className="text-xs font-normal text-muted-foreground">
+                        {noti.type}
+                      </p>
                     </div>
                   </div>
-                </>
+                </div>
               ))}
             </div>
           </PopoverContent>

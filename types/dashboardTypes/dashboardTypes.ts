@@ -26,18 +26,12 @@ export interface DashboardStats {
     active: number;
     inactive: number;
   };
-  comments: {
+  paidAccounts: {
     total: number;
   };
-  testimonials: {
+  trialAccounts: {
     total: number;
-  };
-  banners: {
-    total: number;
-  };
-  notifications: {
-    total: number;
-    unread: number;
-    read: number;
+    active: number;
+    expired: number;
   };
 }

@@ -22,7 +22,7 @@ export default function CreateTripPage() {
     defaultValues: DEFAULT_TRIP_VALUES,
   });
 
-  const { clearDraft } = useDraft<TripFormData>(form, "create-trip-draft");
+  const {clearDraft } = useDraft<TripFormData>(form, "create-trip-draft");
 
   const onSubmit = async (data: TripFormData) => {
     setIsLoading(true);

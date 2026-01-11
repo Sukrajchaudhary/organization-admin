@@ -5,9 +5,14 @@ const api = {
     list: "users",
   },
   users: {
-    list: "users",
+    list: "users/getUsers",
     deactive:"users/{id}/deactivate",
-    active:"users/{id}/active"
+    active:"users/{id}/active",
+    block:"users/{userId}/block",
+    unblock:"users/{userId}/unblock",
+    upgrade:"users/{id}/upgrade" ,//put method
+    paid:"users/{id}/make-paid",
+    revokePaid:"users/{id}/revoke-paid"
   },
   media:{
     list:"media",

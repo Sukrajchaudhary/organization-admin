@@ -1,6 +1,5 @@
 "use client";
-
-import { Users, FileText, MessageSquare, FolderOpen, Bell, MessagesSquare, Star, Image } from "lucide-react"
+import { Users, MessageSquare, CreditCard, Clock, UserCheck } from "lucide-react"
 import { StatsCard } from "@/components/dashboard/stats-card"
 import { RecentOrders } from "@/components/dashboard/recent-orders"
 import { AnalyticsChart } from "@/components/dashboard/analytics-chart"
@@ -8,7 +7,6 @@ import { useQuery } from "@tanstack/react-query"
 import { getDashboardStats } from "@/apiServices/dashboard/api.dashboardServices"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent } from "@/components/ui/card"
-
 export default function DashboardPage() {
   const { data: statsData, isLoading } = useQuery({
     queryKey: ["dashboard-stats"],
@@ -17,9 +15,7 @@ export default function DashboardPage() {
     refetchOnWindowFocus: false, // Don't refetch on window focus
     staleTime: 5 * 60 * 1000, // Keep data fresh for 5 minutes
   });
-
   const stats = statsData?.data;
-
   return (
     <div className="space-y-6">
       <div>
@@ -29,7 +25,7 @@ export default function DashboardPage() {
 
       {isLoading ? (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <Card key={i} className="bg-card border-border">
               <CardContent className="p-6">
                 <Skeleton className="h-4 w-24 mb-4" />
@@ -44,58 +40,37 @@ export default function DashboardPage() {
           <StatsCard
             title="Total Users"
             value={stats.users.total.toString()}
-            change={`${stats.users.active} active`}
+            change={`${stats.users.active} active, ${stats.users.inactive} inactive`}
             changeType="positive"
             icon={Users}
           />
           <StatsCard
+            title="Users by Role"
+            value={stats.users.byRole.admin.toString()}
+            change={`${stats.users.byRole.manager} managers, ${stats.users.byRole.user} users`}
+            changeType="positive"
+            icon={UserCheck}
+          />
+          <StatsCard
             title="Total Queries"
             value={stats.queries.total.toString()}
-            change={`${stats.queries.pending} pending`}
+            change={`${stats.queries.pending} pending, ${stats.queries.resolved} resolved`}
             changeType={stats.queries.pending > 0 ? "negative" : "positive"}
             icon={MessageSquare}
           />
           <StatsCard
-            title="Total Blogs"
-            value={stats.blogs.total.toString()}
-            change={`${stats.blogs.published} published`}
+            title="Paid Accounts"
+            value={stats.paidAccounts.total.toString()}
+            change="Total paid accounts"
             changeType="positive"
-            icon={FileText}
+            icon={CreditCard}
           />
           <StatsCard
-            title="Categories"
-            value={stats.categories.total.toString()}
-            change={`${stats.categories.active} active`}
-            changeType="positive"
-            icon={FolderOpen}
-          />
-          <StatsCard
-            title="Comments"
-            value={stats.comments.total.toString()}
-            change="Total comments"
-            changeType="positive"
-            icon={MessagesSquare}
-          />
-          <StatsCard
-            title="Testimonials"
-            value={stats.testimonials.total.toString()}
-            change="Total testimonials"
-            changeType="positive"
-            icon={Star}
-          />
-          <StatsCard
-            title="Banners"
-            value={stats.banners.total.toString()}
-            change="Active banners"
-            changeType="positive"
-            icon={Image}
-          />
-          <StatsCard
-            title="Notifications"
-            value={stats.notifications.total.toString()}
-            change={`${stats.notifications.unread} unread`}
-            changeType={stats.notifications.unread > 0 ? "negative" : "positive"}
-            icon={Bell}
+            title="Trial Accounts"
+            value={stats.trialAccounts.total.toString()}
+            change={`${stats.trialAccounts.active} active, ${stats.trialAccounts.expired} expired`}
+            changeType={stats.trialAccounts.expired > 0 ? "negative" : "positive"}
+            icon={Clock}
           />
         </div>
       ) : null}

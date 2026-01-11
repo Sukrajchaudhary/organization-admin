@@ -62,7 +62,6 @@ export function useDraft<T extends FieldValues>(
           if (!isActive) return;
           
           if (request.result && request.result.data) {
-            console.log(`[useDraft] Draft found for ${key}`, request.result.data);
             form.reset(request.result.data as DefaultValues<T>);
             setHasDraft(true);
             toast({
@@ -102,7 +101,6 @@ export function useDraft<T extends FieldValues>(
   // Handle Server Data Updates (if no draft)
   useEffect(() => {
       if (isDraftLoaded && !hasDraft && serverData) {
-          console.log(`[useDraft] Syncing with server data for ${key}`);
           form.reset(serverData as DefaultValues<T>);
       }
   }, [serverData, hasDraft, isDraftLoaded, form, key]);
@@ -123,8 +121,7 @@ export function useDraft<T extends FieldValues>(
   );
 
   useEffect(() => {
-    if (!isDraftLoaded) return; // Don't start watching until we've attempted to load
-
+    if (!isDraftLoaded) return;
     const subscription = form.watch((value) => {
       // Debounce saving
       const handler = setTimeout(() => {

@@ -1,5 +1,6 @@
 import api from "../api.services";
 import { apiClient } from "@/lib/api-client";
+import { replacePathParams } from "@/lib/utils";
 import { ApiResponse } from "@/types/api";
 import { RootBlogsData, CreateBlogData } from "@/types/blogTypes/blogTypes";
 export async function getBlogs(params?: { page?: number; limit?: number }): Promise<ApiResponse<RootBlogsData[]>> {
@@ -12,17 +13,17 @@ export async function getBlogs(params?: { page?: number; limit?: number }): Prom
 }
 
 export async function getBlogById(id: string): Promise<ApiResponse<RootBlogsData>> {
-  return apiClient.get<RootBlogsData>(api.blogs.getBlogById.replace("{id}", id));
+  return apiClient.get<RootBlogsData>(replacePathParams(api.blogs.getBlogById, { id }));
 }
 
 export async function createBlog(data: CreateBlogData): Promise<ApiResponse<RootBlogsData>> {
- return apiClient.post<RootBlogsData>(api.blogs.create, data);
+  return apiClient.post<RootBlogsData>(api.blogs.create, data);
 }
 
 export async function updateBlog(id: string, data: Partial<CreateBlogData>): Promise<ApiResponse<RootBlogsData>> {
- return apiClient.put<RootBlogsData>(api.blogs.update.replace("{id}", id), data);
+  return apiClient.put<RootBlogsData>(replacePathParams(api.blogs.update, { id }), data);
 }
 export async function deleteBlog(id: string): Promise<ApiResponse<void>> {
- return apiClient.delete<void>(api.blogs.delete.replace("{id}",id));
+  return apiClient.delete<void>(replacePathParams(api.blogs.delete, { id }));
 }
 
