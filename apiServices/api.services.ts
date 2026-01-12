@@ -28,6 +28,7 @@ const api = {
   },
   categories:{
    list:"categories",
+   getCategoryById:"categories/{id}",
    create:"categories/create",
    update:"categories/update/{id}",
    delete:"categories/delete/{id}"
@@ -50,7 +51,9 @@ const api = {
     delete: "queries/{id}",
   },
   notifications:{
-    list:"notifications"
+    list:"notifications/me",
+    // list:"notifications",
+    markAllread:"notifications/me/read-all"
   },
   trip:{
     list:"trips",

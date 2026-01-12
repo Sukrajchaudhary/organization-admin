@@ -1,33 +1,40 @@
-export interface CategoryMeta {
-  title: string;
-  description: string;
-  keywords: string[];
+export interface RootCategories {
+  success: boolean;
+  message: string;
+  data: RootCategoryData[];
+  pagination: RootCategoryPagination;
 }
 
-export interface Category {
+export interface RootCategoryData {
   _id: string;
   name: string;
   slug: string;
   description: string;
   isActive: boolean;
   sortOrder: number;
-  image: string;
-  meta: CategoryMeta;
+  meta: RootCategoryDataMeta;
+  image?: string;
   createdAt: string;
   updatedAt: string;
-  __v: number;
+  __v?: number;
 }
 
-export interface CategoryCreate {
-  name: string;
-  slug: string;
-  description: string;
-  isActive: boolean;
-  sortOrder: number;
-  meta: CategoryMeta;
-  image: string;
+export interface RootCategoryDataMeta {
+  title?: string;
+  description?: string;
+  keywords?: string[];
 }
 
-export interface CategoryUpdate extends Partial<CategoryCreate> {
-  _id: string;
+export interface RootCategoryPagination {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
 }
+
+export type CreateCategoryData = Omit<RootCategoryData, '_id' | 'createdAt' | 'updatedAt' | '__v'>;
+
+// Legacy type aliases for backwards compatibility
+export type Category = RootCategoryData;
+export type CategoryMeta = RootCategoryDataMeta;
+export type CategoryCreate = CreateCategoryData;

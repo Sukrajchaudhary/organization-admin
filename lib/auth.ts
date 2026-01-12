@@ -185,8 +185,18 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // Check if token is expired or invalid
       if (!token || !token.sub || token.isExpired) {
-        // Return empty session to force re-authentication
-        throw new Error('Session expired')
+        // Return session with expired flag - don't throw to avoid console errors
+        return {
+          ...session,
+          user: {
+            ...session.user,
+            id: '',
+            role: '',
+            accessToken: '',
+            expiresAt: '',
+          },
+          expires: new Date(0).toISOString(), // Set to past date to invalidate
+        }
       }
 
       // Populate session with token data
@@ -225,7 +235,14 @@ export const authOptions: NextAuthOptions = {
 
 export async function auth() {
   try {
-    return await getServerSession(authOptions)
+    const session = await getServerSession(authOptions)
+
+    // Check if session was invalidated (expired token)
+    if (!session?.user?.id || session.expires === new Date(0).toISOString()) {
+      return null
+    }
+
+    return session
   } catch (error) {
     return null
   }

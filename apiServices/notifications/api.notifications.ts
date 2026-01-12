@@ -12,3 +12,7 @@ export async function getAllNotifications(params?: { page?: number; limit?: numb
   const endpoint = queryString ? `${api.notifications.list}?${queryString}` : api.notifications.list;
   return apiClient.get<NotificationData[]>(endpoint);
 }
+
+export async function markAllNotificationsAsRead(): Promise<ApiResponse<void>> {
+  return apiClient.put<void>(api.notifications.markAllread);
+}
