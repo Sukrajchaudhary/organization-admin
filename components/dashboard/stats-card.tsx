@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 import type { LucideIcon } from "lucide-react"
 
@@ -11,19 +10,31 @@ interface StatsCardProps {
 }
 
 export function StatsCard({ title, value, change, changeType, icon: Icon }: StatsCardProps) {
+  const isPositive = changeType === "positive";
+
   return (
-    <Card className="bg-card gap-0  border-border">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-base font-bold text-muted-foreground">{title}</CardTitle>
-        <span className="bg-[#DEE4E6] flex justify-center items-center rounded-full p-2">        <Icon className="h-6 w-6 text-[#000000]" />
-        </span>
-      </CardHeader>
-      <CardContent>
-        <div className="text-xl font-bold">{value}</div>
-        <p className={cn("text-xs mt-1", changeType === "positive" ? "text-emerald-500" : "text-red-500")}>
-          {change} from last month
-        </p>
-      </CardContent>
-    </Card>
+    <div className="rounded-xl border bg-card p-4 hover:shadow-sm transition-shadow">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-semibold ">
+            {title}
+          </p>
+          <p className="mt-2 text-xl font-semibold">{value}</p>
+          <p className={cn(
+            "mt-1 text-xs truncate",
+            isPositive ? "text-emerald-600" : "text-rose-600"
+          )}>
+            {change}
+          </p>
+        </div>
+
+        <div className={cn(
+          "shrink-0 size-10 rounded-lg flex items-center justify-center",
+          isPositive ? "bg-emerald-100 text-emerald-600" : "bg-rose-100 text-rose-600"
+        )}>
+          <Icon className="size-5" />
+        </div>
+      </div>
+    </div>
   )
 }

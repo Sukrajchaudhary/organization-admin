@@ -36,6 +36,9 @@ const api = {
   dashboard: {
     stats: "dashboard/stats",
     analytics: "dashboard/analytics",
+    registrationsMonthly: "dashboard/registrations/monthly",
+    registrationsYearly: "dashboard/registrations/yearly",
+    registrationsRange: "dashboard/registrations/range",
   },
   orders: {
     list: "orders",

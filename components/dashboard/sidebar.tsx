@@ -46,10 +46,10 @@ export function Sidebar() {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      <div className="flex h-16 items-center justify-between px-4 border-b border-sidebar-border">
+      <div className="flex h-16  items-center justify-between px-4 border-b border-sidebar-border">
         {!collapsed && (
-          <span className="text-xl font-bold text-sidebar-foreground">
-            Admin
+          <span className="text-base font-bold text-sidebar-foreground">
+            Danfe Home Service
           </span>
         )}
         <Button
