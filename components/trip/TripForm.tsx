@@ -24,9 +24,15 @@ import {
 import { TripFormData } from "@/formschema/tripSchema";
 import ImageSelectModal from "@/components/media/ImageSelectModal";
 import Image from "next/image";
-import ReactQuill from "react-quill-new";
+import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import ReactSelect from "@/components/ui/secect";
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+  loading: () => <div className="h-[200px] w-full bg-muted animate-pulse rounded-md" />,
+});
 import { FormSection } from "./FormSection";
 import { DatesPricesFields } from "./DatesPricesFields";
 import { CostSectionFields } from "./CostSectionFields";

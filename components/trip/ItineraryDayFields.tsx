@@ -1,3 +1,4 @@
+"use client";
 import { UseFormReturn } from "react-hook-form";
 import { TripFormData } from "@/formschema/tripSchema";
 import {
@@ -17,9 +18,15 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import ReactQuill from "react-quill-new";
+import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { MEAL_OPTIONS, QUILL_MODULES_BASIC } from "@/constants/tripConstants";
+
+// Dynamically import ReactQuill to avoid SSR issues
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+  loading: () => <div className="h-[150px] w-full bg-muted animate-pulse rounded-md" />,
+});
 
 interface ItineraryDayFieldsProps {
   form: UseFormReturn<TripFormData>;

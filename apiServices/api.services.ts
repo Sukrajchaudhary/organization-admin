@@ -62,6 +62,14 @@ const api = {
     list:"trips",
     create:"trips",
     getByid:"trips/{id}"
+  },
+  plans:{
+    list:"plans",
+    getById:"plans/{id}",
+    create:"plans",
+    update:"plans/{id}",
+    delete:"plans/{id}",
+    toggleStatus:"plans/{id}/toggle-status"
   }
 };
 
